@@ -1,19 +1,20 @@
 require("dotenv").config();
 var fs = require("fs");
-var Twitter = require('twitter');
-var spotify = require('node-spotify-api');
-var request = require('request');
 var keys = require('./keys.js');
-var client = new Twitter(keys);
+var Twitter = require('twitter');
+var Spotify = require('node-spotify-api');
+var request = require('request');
+var client = new Twitter(keys.twitter);
+var spotify = new Spotify(keys.spotify);
 
 var app = {
     "my-tweets": function () {
-        var params = {screen_name: 'Evisius'};
+        var params = {screen_name: 'TedTalks'};
         client.get('statuses/user_timeline', params, function (error, tweetData, response) {
             if (!error) {
                 for(var i = 0; i<tweetData.length; i++){
-                    var date = tweets[i].created_at;
-                    console.log("@Evisius: " + tweets[i].text + " Created At: " + date.substring(0, 19));
+                    var date = tweetData[i].created_at;
+                    console.log("@TedTalks: " + tweetData[i].text + " Created At: " + date.substring(0, 19));
                     console.log("-----------------------");
 
                 app.logData(tweetData);
@@ -54,7 +55,7 @@ var app = {
         });
     },
     "movie-this": function (query) {
-        request('http://www.omdbapi.com/?t=' + (query || 'Mr.Nobody') + '&tomatoes=true', function (error, response, info) {
+        request('http://www.omdbapi.com/?t=' + (query || 'Mr.Nobody') + '&tomatoes=true&apikey=trilogy', function (error, response, info) {
             if (!error && response.statusCode == 200) {
 
                 var movieData = JSON.parse(info);
